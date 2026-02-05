@@ -12,7 +12,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 pendingAction: message.id
             }, () => {
                 chrome.sidePanel.setOptions({
-                    path: 'https://gemini.google.com/app',
+                    // Append a timestamp to force a refresh/new chat if the panel is already open
+                    path: `https://gemini.google.com/app?newchat=${Date.now()}`,
                     enabled: true
                 });
                 chrome.sidePanel.open({ windowId });

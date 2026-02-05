@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Edit, Lightbulb, PenTool, Send, ChevronLeft } from 'lucide-react'
+import { Search, Edit, Lightbulb, PenTool, Send, ChevronLeft, MessageSquare } from 'lucide-react'
 import { extractConfluenceContent } from '../../utils/confluence'
 import { buildPrompt } from '../../utils/promptBuilder'
 
@@ -9,6 +9,7 @@ const menuItems = [
     { id: 'refine', label: '문서 교정', icon: Edit, color: 'bg-amber-500' },
     { id: 'plan', label: '기획 하기', icon: Lightbulb, color: 'bg-violet-500', needsInput: true },
     { id: 'prototype', label: '프로토타입 만들기', icon: PenTool, color: 'bg-rose-500' },
+    { id: 'chat', label: '대화 하기', icon: MessageSquare, color: 'bg-blue-500' },
 ]
 
 const Menu: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -25,6 +26,14 @@ const Menu: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         try {
             const markdown = extractConfluenceContent()
+            // Copy to clipboard as requested
+            try {
+                await navigator.clipboard.writeText(markdown);
+                console.log('Content copied to clipboard');
+            } catch (copyErr) {
+                console.warn('Failed to copy to clipboard:', copyErr);
+            }
+
             const prompt = buildPrompt(item.id, markdown)
             sendToGemini(prompt, item.id)
         } catch (err) {
