@@ -12,7 +12,7 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className="mt-40 mr-12 flex flex-col items-end gap-4 font-sans pointer-events-auto">
+        <div className="mt-40 mr-64 flex flex-col items-end gap-4 font-sans pointer-events-auto">
             <FloatingButton isOpen={isOpen} onClick={toggleMenu} />
             <AnimatePresence>
                 {isOpen && (

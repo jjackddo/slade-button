@@ -39,8 +39,15 @@
     "side_panel": {
         "default_path": "sidepanel.html"
     },
+    "icons": {
+        "16": "button-icon.png",
+        "32": "button-icon.png",
+        "48": "button-icon.png",
+        "128": "button-icon.png"
+    },
     "action": {
-        "default_title": "Open Gemini Assistant"
+        "default_icon": "button-icon.png",
+        "default_title": "회장님 말씀"
     },
     "web_accessible_resources": [
         {

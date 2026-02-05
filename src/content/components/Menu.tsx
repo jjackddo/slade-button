@@ -8,7 +8,6 @@ const menuItems = [
     { id: 'review', label: '초안 검토', icon: Search, color: 'bg-emerald-500' },
     { id: 'refine', label: '문서 교정', icon: Edit, color: 'bg-amber-500' },
     { id: 'plan', label: '기획 하기', icon: Lightbulb, color: 'bg-violet-500', needsInput: true },
-    { id: 'prototype', label: '프로토타입 만들기', icon: PenTool, color: 'bg-rose-500' },
     { id: 'chat', label: '대화 하기', icon: MessageSquare, color: 'bg-blue-500' },
 ]
 
