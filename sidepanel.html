@@ -21,18 +21,8 @@
 
 <body>
     <iframe id="gemini-frame" src="https://gemini.google.com/app" allow="clipboard-read; clipboard-write"></iframe>
-    <script>
-        // 새로운 액션 발생 시 프레임을 새로고침하여 주입 스크립트를 재실행시킵니다.
-        chrome.storage.onChanged.addListener((changes, namespace) => {
-            if (namespace === 'local' && changes.lastUpdate) {
-                console.log('SidePanel: New action detected, reloading Gemini frame...');
-                const frame = document.getElementById('gemini-frame');
-                if (frame) {
-                    frame.src = "https://gemini.google.com/app?refresh=" + Date.now();
-                }
-            }
-        });
-    </script>
+    <!-- CSP 준수를 위해 인라인 스크립트를 외부 파일로 분리했습니다 -->
+    <script src="sidepanel.js"></script>
 </body>
 
 </html>
