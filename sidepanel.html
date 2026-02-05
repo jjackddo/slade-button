@@ -5,36 +5,38 @@
     <meta charset="UTF-8">
     <title>Gemini Assistant</title>
     <style>
-        body,
-        html,
-        iframe {
+        body {
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            border: none;
-            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+            background: #f8f9fa;
+        }
+
+        .loading {
+            text-align: center;
+            color: #5f6368;
         }
     </style>
 </head>
 
 <body>
-    <iframe id="gemini-frame" src="https://gemini.google.com/app" allow="clipboard-read; clipboard-write"></iframe>
+    <div class="loading">
+        <h3>제미나이로 연결 중...</h3>
+        <p>잠시만 기다려 주세요.</p>
+    </div>
     <script>
-        // Listen for storage changes to force an iframe refresh when a new action is triggered
-        chrome.storage.onChanged.addListener((changes, namespace) => {
-            if (namespace === 'local' && (changes.pendingPrompt || changes.lastUpdate)) {
-                console.log('SidePanel: New action detected, reloading Gemini...');
-                const frame = document.getElementById('gemini-frame');
-                if (frame) {
-                    // Append a timestamp to force a real reload and potentially a new chat state
-                    frame.src = "https://gemini.google.com/app?refresh=" + Date.now();
-                }
-            }
-        });
+        // iframe 방식은 구글 보안 정책(X-Frame-Options)으로 차단되므로
+        // 사이드 패널 자체의 주소를 이동시킵니다.
+        const targetUrl = "https://gemini.google.com/app";
 
-        console.log('SidePanel: Monitor loaded');
+        // storage에서 마지막 업데이트 시간을 가져와 새 챗 강제 여부 결정 가능
+        chrome.storage.local.get(['pendingPrompt'], (data) => {
+            window.location.replace(targetUrl);
+        });
     </script>
 </body>
 
