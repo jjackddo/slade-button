@@ -23,4 +23,5 @@ output.on('close', () => {
 archive.on('error', (err) => { throw err; });
 archive.pipe(output);
 archive.directory(distDir, false);
+archive.file('README.md', { name: 'README.md' });
 archive.finalize();
