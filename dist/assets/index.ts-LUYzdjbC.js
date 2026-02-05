@@ -1,0 +1,1 @@
+chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:!0}).catch(e=>console.error(e));chrome.runtime.onMessage.addListener((e,o,a)=>{e.action==="OPEN_GEMINI"&&(chrome.sidePanel.setOptions({path:"sidepanel.html",enabled:!0}),o.tab&&o.tab.windowId!==void 0?(chrome.sidePanel.open({windowId:o.tab.windowId}),a({success:!0})):a({success:!1,error:"No tab or window ID found"}))});

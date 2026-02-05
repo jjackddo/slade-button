@@ -1,0 +1,35 @@
+{
+    "manifest_version": 3,
+    "name": "Confluence Gemini Assistant",
+    "version": "1.0.0",
+    "description": "Confluence 페이지에 AI 어시스턴트를 추가합니다.",
+    "permissions": [
+        "sidePanel",
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://*.atlassian.net/*",
+        "https://gemini.google.com/*"
+    ],
+    "background": {
+        "service_worker": "src/background/index.ts",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*.atlassian.net/wiki/spaces/*"
+            ],
+            "js": [
+                "src/content/index.tsx"
+            ]
+        }
+    ],
+    "side_panel": {
+        "default_path": "sidepanel.html"
+    },
+    "action": {
+        "default_title": "Open Gemini Assistant"
+    }
+}
