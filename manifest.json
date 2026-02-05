@@ -7,12 +7,22 @@
         "sidePanel",
         "activeTab",
         "scripting",
-        "storage"
+        "storage",
+        "declarativeNetRequest"
     ],
     "host_permissions": [
         "https://*.atlassian.net/*",
         "https://gemini.google.com/*"
     ],
+    "declarative_net_request": {
+        "rule_resources": [
+            {
+                "id": "ruleset_1",
+                "enabled": true,
+                "path": "rules.json"
+            }
+        ]
+    },
     "background": {
         "service_worker": "src/background/index.ts",
         "type": "module"

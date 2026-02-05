@@ -5,37 +5,32 @@
     <meta charset="UTF-8">
     <title>Gemini Assistant</title>
     <style>
-        body {
+        body,
+        html,
+        iframe {
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: sans-serif;
-            background: #f8f9fa;
-        }
-
-        .loading {
-            text-align: center;
-            color: #5f6368;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border: none;
+            background: #fff;
         }
     </style>
 </head>
 
 <body>
-    <div class="loading">
-        <h3>제미나이로 연결 중...</h3>
-        <p>잠시만 기다려 주세요.</p>
-    </div>
+    <iframe id="gemini-frame" src="https://gemini.google.com/app" allow="clipboard-read; clipboard-write"></iframe>
     <script>
-        // iframe 방식은 구글 보안 정책(X-Frame-Options)으로 차단되므로
-        // 사이드 패널 자체의 주소를 이동시킵니다.
-        const targetUrl = "https://gemini.google.com/app";
-
-        // storage에서 마지막 업데이트 시간을 가져와 새 챗 강제 여부 결정 가능
-        chrome.storage.local.get(['pendingPrompt'], (data) => {
-            window.location.replace(targetUrl);
+        // 새로운 액션 발생 시 프레임을 새로고침하여 주입 스크립트를 재실행시킵니다.
+        chrome.storage.onChanged.addListener((changes, namespace) => {
+            if (namespace === 'local' && changes.lastUpdate) {
+                console.log('SidePanel: New action detected, reloading Gemini frame...');
+                const frame = document.getElementById('gemini-frame');
+                if (frame) {
+                    frame.src = "https://gemini.google.com/app?refresh=" + Date.now();
+                }
+            }
         });
     </script>
 </body>
