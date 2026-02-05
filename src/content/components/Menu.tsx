@@ -16,25 +16,25 @@ const Menu: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [selectedItem, setSelectedItem] = useState<typeof menuItems[0] | null>(null)
     const [inputValue, setInputValue] = useState('')
 
-    const handleAction = async (item: typeof menuItems[0]) => {
+    const handleAction = (item: typeof menuItems[0]) => {
         if (item.needsInput) {
             setSelectedItem(item)
             setActiveTab('input')
             return
         }
 
+        // Perform content extraction synchronously
         try {
             const markdown = extractConfluenceContent()
-            // Copy to clipboard as requested
-            try {
-                await navigator.clipboard.writeText(markdown);
-                console.log('Content copied to clipboard');
-            } catch (copyErr) {
-                console.warn('Failed to copy to clipboard:', copyErr);
-            }
-
             const prompt = buildPrompt(item.id, markdown)
+
+            // Trigger Gemini immediately to preserve user gesture
             sendToGemini(prompt, item.id)
+
+            // Perform clipboard copy in the background (non-blocking)
+            navigator.clipboard.writeText(markdown).catch(err => {
+                console.warn('Failed to copy to clipboard:', err);
+            });
         } catch (err) {
             console.error('Action failed:', err)
         }
