@@ -1,12 +1,6 @@
-// 새로운 액션 발생 시 프레임을 새로고침하여 주입 스크립트를 재실행시킵니다.
-chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace === 'local' && (changes.pendingPrompt || changes.lastUpdate)) {
-        console.log('SidePanel: New action detected, reloading Gemini frame...');
-        const frame = document.getElementById('gemini-frame');
-        if (frame) {
-            frame.src = "https://gemini.google.com/app?refresh=" + Date.now();
-        }
-    }
-});
+// SidePanel script
+// 기존에는 여기서 스토리지 변경 시 리로드를 했으나, 
+// src/gemini/index.ts에서 직접 제어하고, 전송 완료 시 스토리지 삭제로 인한 
+// 불필요한 리로드를 방지하기 위해 해당 로직을 제거했습니다.
 
 console.log('SidePanel: Monitor script loaded and active');
