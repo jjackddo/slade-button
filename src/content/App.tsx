@@ -6,12 +6,21 @@ import { AnimatePresence } from 'framer-motion'
 const App: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false)
 
+    const toggleMenu = () => {
+        console.log('App: Toggling menu. Current state:', isOpen);
+        setIsOpen(!isOpen);
+    }
+
     return (
-        <div className="fixed bottom-8 right-8 z-[2147483647] flex flex-col items-end gap-4 font-sans">
+        <div className="mt-40 mr-12 flex flex-col items-end gap-4 font-sans pointer-events-auto">
+            <FloatingButton isOpen={isOpen} onClick={toggleMenu} />
             <AnimatePresence>
-                {isOpen && <Menu />}
+                {isOpen && (
+                    <div key="menu-wrapper">
+                        <Menu onClose={() => setIsOpen(false)} />
+                    </div>
+                )}
             </AnimatePresence>
-            <FloatingButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
         </div>
     )
 }

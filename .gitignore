@@ -1,7 +1,8 @@
 node_modules
 dist
+release
 .vscode
 .DS_Store
 *.local
 package-lock.json
-node_modules
+*.log

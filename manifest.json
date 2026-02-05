@@ -1,12 +1,13 @@
 {
     "manifest_version": 3,
-    "name": "Confluence Gemini Assistant",
+    "name": "회장님 말씀",
     "version": "1.0.0",
     "description": "Confluence 페이지에 AI 어시스턴트를 추가합니다.",
     "permissions": [
         "sidePanel",
         "activeTab",
-        "scripting"
+        "scripting",
+        "storage"
     ],
     "host_permissions": [
         "https://*.atlassian.net/*",
@@ -19,11 +20,20 @@
     "content_scripts": [
         {
             "matches": [
-                "https://*.atlassian.net/wiki/spaces/*"
+                "https://*.atlassian.net/wiki/*"
             ],
             "js": [
                 "src/content/index.tsx"
             ]
+        },
+        {
+            "matches": [
+                "https://gemini.google.com/*"
+            ],
+            "js": [
+                "src/gemini/index.ts"
+            ],
+            "all_frames": true
         }
     ],
     "side_panel": {
@@ -31,5 +41,15 @@
     },
     "action": {
         "default_title": "Open Gemini Assistant"
-    }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "button-icon.png"
+            ],
+            "matches": [
+                "https://*.atlassian.net/*"
+            ]
+        }
+    ]
 }
