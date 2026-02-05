@@ -6,12 +6,17 @@ import './index.css'
 console.log('Confluence Gemini Assistant: Content script starting...');
 
 let rootInstance: ReactDOM.Root | null = null;
+let observer: MutationObserver | null = null;
 
 const init = () => {
-    // 기존 루트가 있다면 제거하여 깨끗한 상태로 유지
+    // 1. 임시로 옵저버 중지 (무한 루프 방지)
+    if (observer) {
+        observer.disconnect();
+    }
+
+    // 2. 기존 루트가 있다면 제거
     const existingRoot = document.getElementById('confluence-gemini-root');
     if (existingRoot) {
-        console.log('Confluence Gemini Assistant: Cleaning up existing root before re-init');
         existingRoot.remove();
     }
 
@@ -20,24 +25,20 @@ const init = () => {
 
     // 스타일 강제 적용
     Object.assign(root.style, {
-        position: 'fixed !important',
-        top: '0 !important',
-        right: '0 !important',
-        width: 'auto !important',
-        height: 'auto !important',
-        zIndex: '2147483647 !important',
+        position: 'fixed',
+        top: '0',
+        right: '0',
+        width: 'auto',
+        height: 'auto',
+        zIndex: '2147483647',
         pointerEvents: 'none',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        margin: '0',
+        padding: '0'
     });
-
-    // 실제 스타일은 CSS 클래스로 처리하되 초기 위치만 고정
-    root.style.position = 'fixed';
-    root.style.top = '0';
-    root.style.right = '0';
-    root.style.zIndex = '2147483647';
 
     document.body.appendChild(root);
 
@@ -48,29 +49,36 @@ const init = () => {
         </React.StrictMode>
     );
 
-    console.log('Confluence Gemini Assistant: Re-rendered successfully');
+    console.log('Confluence Gemini Assistant: Initialized successfully');
+
+    // 3. 옵저버 재시작
+    if (observer) {
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
 }
 
-// 초기 실행
+// 초기 로드
 if (document.readyState === 'complete') {
-    init();
+    setTimeout(init, 500); // 페이지 완전 로드 후 약간의 여유
 } else {
     window.addEventListener('load', init);
 }
 
-// 컨플루언서 페이지 이동 감지 (SPA 대응)
+// 컨플루언서 페이지 이동 감지 (SPA 및 불시 삭제 대응)
 let lastUrl = location.href;
-const observer = new MutationObserver(() => {
+observer = new MutationObserver(() => {
     if (lastUrl !== location.href) {
         lastUrl = location.href;
         console.log('Confluence Gemini Assistant: URL changed, re-initializing...');
-        setTimeout(init, 1000); // 페이지 로드 시간을 위해 약간 지연
+        setTimeout(init, 1000);
+        return;
     }
 
-    // 버튼이 강제로 삭제된 경우 대응
+    // 루트 요소가 사라진 경우만 다시 생성 (내부 변화는 무시)
     if (!document.getElementById('confluence-gemini-root')) {
+        console.log('Confluence Gemini Assistant: Root missing, re-initializing...');
         init();
     }
 });
 
-observer.observe(document.body, { childList: true, subtree: true });
+observer.observe(document.body, { childList: true, subtree: false }); // subtree: false로 본문 상위 노드 변화만 감지

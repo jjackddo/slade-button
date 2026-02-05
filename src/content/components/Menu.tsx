@@ -49,6 +49,7 @@ const Menu: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     const sendToGemini = (prompt: string, itemId: string) => {
         try {
+            console.log('Menu: Sending OPEN_GEMINI message to background for action:', itemId);
             // 3. Open Gemini Side Panel with prompt
             chrome.runtime.sendMessage({ action: 'OPEN_GEMINI', prompt, id: itemId })
         } catch (e: any) {
