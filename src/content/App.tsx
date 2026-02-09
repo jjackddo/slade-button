@@ -1,26 +1,34 @@
 import React, { useState } from 'react'
 import FloatingButton from './components/FloatingButton'
 import Menu from './components/Menu'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const App: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const constraintsRef = React.useRef(null)
 
     const toggleMenu = () => {
-        console.log('App: Toggling menu. Current state:', isOpen);
         setIsOpen(!isOpen);
     }
 
     return (
-        <div className="mt-40 mr-64 flex flex-col items-end gap-4 font-sans pointer-events-auto">
-            <FloatingButton isOpen={isOpen} onClick={toggleMenu} />
-            <AnimatePresence>
-                {isOpen && (
-                    <div key="menu-wrapper">
-                        <Menu onClose={() => setIsOpen(false)} />
-                    </div>
-                )}
-            </AnimatePresence>
+        <div ref={constraintsRef} className="fixed inset-0 pointer-events-none font-sans overflow-hidden">
+            <motion.div
+                drag
+                dragConstraints={constraintsRef}
+                dragMomentum={false}
+                dragElastic={0.1}
+                className="absolute right-64 top-40 pointer-events-auto flex flex-col items-end gap-4"
+            >
+                <FloatingButton isOpen={isOpen} onClick={toggleMenu} />
+                <AnimatePresence>
+                    {isOpen && (
+                        <div key="menu-wrapper">
+                            <Menu onClose={() => setIsOpen(false)} />
+                        </div>
+                    )}
+                </AnimatePresence>
+            </motion.div>
         </div>
     )
 }

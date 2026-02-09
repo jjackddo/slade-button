@@ -27,15 +27,11 @@ const init = () => {
     Object.assign(root.style, {
         position: 'fixed',
         top: '0',
-        right: '0',
-        width: 'auto',
-        height: 'auto',
+        left: '0',
+        width: '100vw',
+        height: '100vh',
         zIndex: '2147483647',
         pointerEvents: 'none',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-end',
         margin: '0',
         padding: '0'
     });
