@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import './index.css'
+import styles from './index.css?inline'
 
 console.log('Confluence Gemini Assistant: Content script starting...');
 
@@ -38,14 +38,27 @@ const init = () => {
 
     document.body.appendChild(root);
 
-    rootInstance = ReactDOM.createRoot(root);
+    // Shadow DOM 생성
+    const shadowRoot = root.attachShadow({ mode: 'open' });
+
+    // CSS 주입
+    const styleElement = document.createElement('style');
+    styleElement.textContent = styles;
+    shadowRoot.appendChild(styleElement);
+
+    // Shadow DOM 내부에 컨테이너 생성
+    const container = document.createElement('div');
+    container.id = 'app-container';
+    shadowRoot.appendChild(container);
+
+    rootInstance = ReactDOM.createRoot(container);
     rootInstance.render(
         <React.StrictMode>
             <App />
         </React.StrictMode>
     );
 
-    console.log('Confluence Gemini Assistant: Initialized successfully');
+    console.log('Confluence Gemini Assistant: Initialized successfully with Shadow DOM');
 
     // 3. 옵저버 재시작
     if (observer) {
